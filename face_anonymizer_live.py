@@ -3,6 +3,17 @@ import argparse
 import mediapipe as mp
 import os
 
+args = argparse.ArgumentParser(description="set the mode for the face anonymizer based on input type")
+
+
+args.add_argument("--mode", default='video', choices=['webcam', 'image', 'video'], help="Which mode you want to be in (webcam, video, picture)")
+
+args.add_argument("--filePath", default='person.mp4', help="Path to the video or picture file")
+ 
+args = args.parse_args()
+
+print(f"Running in {args.mode} mode.")
+
 def process_image(img, face_detection):
     H, W, _ = img.shape
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -26,11 +37,6 @@ def process_image(img, face_detection):
             
     return img
 
-args = argparse.ArgumentParser()
-
-args.add_argument("--mode", default='webcam')
-args.add_argument("--filePath", default=None)
-args = args.parse_args()
     
 
 output_dir = './output'
@@ -53,8 +59,6 @@ with mp_face_detection.FaceDetection(model_selection = 0, min_detection_confiden
     
     elif args.mode in ["video"]:
         
-        
-        
         cap = cv2.VideoCapture(args.filePath)
         ret, frame = cap.read()
         
@@ -67,8 +71,6 @@ with mp_face_detection.FaceDetection(model_selection = 0, min_detection_confiden
             
             ret, frame = cap.read()
             
-            
-
         cap.release()
         output_video.release()
         
